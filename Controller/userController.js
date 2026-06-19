@@ -50,7 +50,7 @@ export const login = async (req, res) => {
     }
 
     const isMatch = await bcrypt.compare(password, userExist.password);
-    if (isMatch) {
+    if (!isMatch) {
       return res
         .status(401)
         .json({ success: false, message: "invalid credentials" });
@@ -60,11 +60,18 @@ export const login = async (req, res) => {
       expiresIn: "1d",
     });
 
+    res.cookie("authToken", token, {
+      httpOnly:true,
+      maxAge:86400000,
+      secure:true,
+      sameSite:"lax"
+    });
+
     res.status(200).json({
       success: true,
       message: "User login successfully!!!",
       token: token,
-      user:userExist,
+      user: userExist,
     });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });

@@ -4,10 +4,12 @@ import cors from "cors";
 import connectDb from "./Config/db.js";
 import blogRoutes from "./Routes/blogRoute.js";
 import userRoutes from "./Routes/userRoute.js";
+import cookieParser from "cookie-parser";
 
 const app = express();
 dotenv.config();
 app.use(express.json());
+app.use(cookieParser())
 app.use(cors());
 connectDb();
 
