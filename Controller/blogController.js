@@ -89,8 +89,8 @@ export const getBlogById = async (req, res) => {
 
 //UPDATE BLOG
 export const updateBlog = async (req, res) => {
-  console.log("BODY:", req.body);
-  console.log("FILES:", req.files);
+  // console.log("BODY:", req.body);
+  // console.log("FILES:", req.files);
   try {
     const updateBlog = await Blog.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
