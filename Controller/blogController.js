@@ -2,7 +2,17 @@ import Blog from "../model/BlogModel.js";
 
 // CREATE BLOG
 export const createBlog = async (req, res) => {
+  console.time("CREAT_BLOG");
+  console.time("TOTAL");
   try {
+    console.time("CLOUDINARY_COMPLETE");
+
+    console.log("Files received:", req.files);
+
+    console.timeEnd("CLOUDINARY_COMPLETE");
+
+    console.time("DB_SAVE");
+
     const { title, description, category, tags, images } = req.body;
     const author = req.users.id;
 
@@ -24,12 +34,26 @@ export const createBlog = async (req, res) => {
       public_id: file.filename,
     }));
 
+    console.log("Controller Started");
 
     const newBlog = new Blog({ ...req.body, author, images: imgUrl });
+
+    console.time("SAVE");
     await newBlog.save();
+
+    const populatedBlog = await Blog.findById(newBlog._id).populate(
+      "author",
+      "name",
+    );
+
+    console.timeEnd("SAVE");
+    console.timeEnd("CREATE_BLOG");
+    console.timeEnd("DB_SAVE");
+    console.timeEnd("TOTAL");
+
     res
       .status(201)
-      .json({ message: "Blog created successfully", blog: newBlog });
+      .json({ message: "Blog created successfully", blog: populatedBlog });
   } catch (error) {
     console.error("Error creating blog:", error);
     res.status(500).json({ message: "Internal server error" });
@@ -65,6 +89,8 @@ export const getBlogById = async (req, res) => {
 
 //UPDATE BLOG
 export const updateBlog = async (req, res) => {
+  console.log("BODY:", req.body);
+  console.log("FILES:", req.files);
   try {
     const updateBlog = await Blog.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
