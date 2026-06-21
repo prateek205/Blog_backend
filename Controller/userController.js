@@ -156,3 +156,25 @@ export const logout = async (req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 };
+
+// UPDATE PROFILE
+
+export const updateProfile = async (req, res) => {
+  try {
+    const { name, email, bio } = req.body;
+
+    const updateUser = await Users.findByIdAndUpdate(
+      req.existingUser._id,
+      {
+        name,
+        email,
+        bio,
+      },
+      { new: true },
+    );
+
+    res.status(200).json({success:true, message:"Profile Update Successfully!!!", user:updateUser})
+  } catch (error) {
+    res.status(500).json({success:false, error:error.message})
+  }
+};

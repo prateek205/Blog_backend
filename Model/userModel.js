@@ -16,6 +16,14 @@ const userSchema = new mongoose.Schema(
       required: true,
       minLength: [6, "Password should be atleast 6 characters"],
     },
+    bio:{
+      type:String,
+      maxLength:300,
+    },
+    profilePic:{
+      type:String,
+      default:""
+    }
   },
   {
     timestamps: true,

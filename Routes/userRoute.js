@@ -7,6 +7,7 @@ import {
   logout,
   profile,
   register,
+  updateProfile,
   updateUser,
 } from "../Controller/userController.js";
 import { protectedRoute } from "../Middleware/AuthMiddleware.js";
@@ -14,6 +15,7 @@ import { protectedRoute } from "../Middleware/AuthMiddleware.js";
 const router = express.Router();
 
 router.get("/profile", protectedRoute, profile);
+router.put("/updateUser", protectedRoute, updateProfile);
 
 router.get("/getAllUser", getAllUser);
 router.get("/getUserById/:id", getUserById);
