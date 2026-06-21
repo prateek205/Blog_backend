@@ -93,6 +93,14 @@ export const updateBlog = async (req, res) => {
     const updateBlog = await Blog.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
+
+    if (blog.author.toString() !== req.users.id) {
+      return res.status(403).json({
+        success: false,
+        message: "You can only edit your own blog",
+      });
+    }
+
     res
       .status(200)
       .json({ message: "Blog updated successfully", blog: updateBlog });
@@ -105,7 +113,15 @@ export const updateBlog = async (req, res) => {
 //DELETE BLOG
 export const deleteBlog = async (req, res) => {
   try {
+    if (blog.author.toString() !== req.users.id) {
+      return res.status(403).json({
+        success: false,
+        message: "You can only delete your own blog",
+      });
+    }
+
     const delBlog = await Blog.findByIdAndDelete(req.params.id);
+
     res.status(200).json({
       success: true,
       message: "Blog Deleted Successfully!!!",
@@ -113,5 +129,23 @@ export const deleteBlog = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+export const getMyBlogs = async (req, res) => {
+  try {
+    const blogs = await Blog.find({
+      author: req.users.id,
+    }).populate("author", "name email");
+
+    res.status(200).json({
+      success: true,
+      blogs,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message,
+    });
   }
 };

@@ -4,6 +4,7 @@ import {
   deleteBlog,
   getBlogById,
   getBlogs,
+  getMyBlogs,
   updateBlog,
 } from "../Controller/blogController.js";
 import upload from "../Middleware/Multer.js";
@@ -13,6 +14,11 @@ const router = express.Router();
 
 router.get("/getAllBlogs", getBlogs);
 router.get("/getBlogById/:id", getBlogById);
+router.get(
+  "/myBlogs",
+  protectedRoute,
+  getMyBlogs
+);
 router.post(
   "/createBlog",
   protectedRoute,
