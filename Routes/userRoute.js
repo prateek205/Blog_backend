@@ -11,6 +11,7 @@ import {
   updateUser,
 } from "../Controller/userController.js";
 import { protectedRoute } from "../Middleware/AuthMiddleware.js";
+import upload from "../Middleware/Multer.js";
 
 const router = express.Router();
 
@@ -21,7 +22,7 @@ router.get("/getAllUser", getAllUser);
 router.get("/getUserById/:id", getUserById);
 router.post("/register", register);
 router.post("/login", login);
-router.get("/logout", logout)
+router.get("/logout", logout);
 router.put("/updateUser/:id", updateUser);
 router.delete("/userDel/:id", delUser);
 export default router;

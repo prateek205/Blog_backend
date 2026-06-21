@@ -56,7 +56,7 @@ export const login = async (req, res) => {
         .json({ success: false, message: "invalid credentials" });
     }
 
-    const token = jwt.sign({ id: userExist._id }, JWT_TOKEN, {
+    const token = jwt.sign({ id: userExist.id }, JWT_TOKEN, {
       expiresIn: "1d",
     });
 
@@ -164,12 +164,8 @@ export const updateProfile = async (req, res) => {
     const { name, email, bio } = req.body;
 
     const updateUser = await Users.findByIdAndUpdate(
-      req.existingUser._id,
-      {
-        name,
-        email,
-        bio,
-      },
+      req.users.id,
+      req.body,
       { new: true },
     );
 
