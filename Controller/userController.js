@@ -61,11 +61,13 @@ export const login = async (req, res) => {
     });
 
     res.cookie("authToken", token, {
-      httpOnly:true,
-      maxAge:86400000,
-      secure:false,
-      sameSite:"lax"
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      path: "/",
     });
+
+    console.log("COOKIE CREATED");
 
     res.status(200).json({
       success: true,
@@ -130,9 +132,26 @@ export const delUser = async (req, res) => {
 
 // USER PROFILE
 
-export const profile = (req, res) => {
+export const profile = async (req, res) => {
   try {
-    res.status(200).json({ success: true, userId: req.userExist.id });
+    const user = await Users.findById(req.users.id).select("-password");
+    res.status(200).json({ success: true, user });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+// LOGOUT
+
+export const logout = async (req, res) => {
+  try {
+    res.clearCookie("authToken", {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      path: "/",
+    });
+    res.status(200).json({ success: true, message: "Logout successfully!!!" });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
