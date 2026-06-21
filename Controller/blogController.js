@@ -90,9 +90,14 @@ export const getBlogById = async (req, res) => {
 //UPDATE BLOG
 export const updateBlog = async (req, res) => {
   try {
-    const updateBlog = await Blog.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
+    const blog = await Blog.findById(req.params.id);
+
+    if (!blog) {
+      return res.status(404).json({
+        success: false,
+        message: "Blog not found",
+      });
+    }
 
     if (blog.author.toString() !== req.users.id) {
       return res.status(403).json({
@@ -100,6 +105,10 @@ export const updateBlog = async (req, res) => {
         message: "You can only edit your own blog",
       });
     }
+
+    const updateBlog = await Blog.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
 
     res
       .status(200)
