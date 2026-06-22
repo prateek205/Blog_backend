@@ -9,11 +9,13 @@ import cookieParser from "cookie-parser";
 const app = express();
 dotenv.config();
 app.use(express.json());
-app.use(cookieParser())
-app.use(cors({
-    origin: "https://blog-frontend-kkeo.onrender.com",
+app.use(cookieParser());
+app.use(
+  cors({
+    origin: ["http:localhost:5173", " https:blog-frontend-kkeo.onrender.com"],
     credentials: true,
-  }));
+  }),
+);
 connectDb();
 
 app.use("/api/v1/blog", blogRoutes);
