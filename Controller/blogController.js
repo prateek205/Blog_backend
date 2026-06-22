@@ -13,7 +13,7 @@ export const createBlog = async (req, res) => {
 
     console.time("DB_SAVE");
 
-    const { title, description, category, tags, images } = req.body;
+    const { title, description } = req.body;
     const author = req.users.id;
 
     const existingBlog = await Blog.findOne({ title });
@@ -74,7 +74,10 @@ export const getBlogs = async (req, res) => {
 //READ BLOG BY _ID
 export const getBlogById = async (req, res) => {
   try {
-    const blog = await Blog.findById(req.params.id);
+    const blog = await Blog.findById(req.params.id).populate(
+      "author",
+      "name email",
+    );
     if (!blog) {
       return res
         .status(404)
@@ -122,6 +125,15 @@ export const updateBlog = async (req, res) => {
 //DELETE BLOG
 export const deleteBlog = async (req, res) => {
   try {
+    const blog = await Blog.findById(req.params.id);
+
+    if (!blog) {
+      return res.status(404).json({
+        success: false,
+        message: "Blog not found",
+      });
+    }
+
     if (blog.author.toString() !== req.users.id) {
       return res.status(403).json({
         success: false,
