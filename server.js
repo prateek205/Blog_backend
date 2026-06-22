@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://blog-frontend-p9ru.onrender.com"],
+    origin: ["http://localhost:5173", "https://blog-frontend-21oi.onrender.com"],
     credentials: true,
   }),
 );
