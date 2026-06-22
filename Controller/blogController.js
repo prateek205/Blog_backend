@@ -5,14 +5,6 @@ export const createBlog = async (req, res) => {
   console.time("CREAT_BLOG");
   console.time("TOTAL");
   try {
-    console.time("CLOUDINARY_COMPLETE");
-
-    console.log("Files received:", req.files);
-
-    console.timeEnd("CLOUDINARY_COMPLETE");
-
-    console.time("DB_SAVE");
-
     const { title, description } = req.body;
     const author = req.users.id;
 
@@ -34,22 +26,14 @@ export const createBlog = async (req, res) => {
       public_id: file.filename,
     }));
 
-    console.log("Controller Started");
-
     const newBlog = new Blog({ ...req.body, author, images: imgUrl });
 
-    console.time("SAVE");
     await newBlog.save();
 
     const populatedBlog = await Blog.findById(newBlog._id).populate(
       "author",
       "name",
     );
-
-    console.timeEnd("SAVE");
-    console.timeEnd("CREATE_BLOG");
-    console.timeEnd("DB_SAVE");
-    console.timeEnd("TOTAL");
 
     res
       .status(201)
@@ -153,6 +137,7 @@ export const deleteBlog = async (req, res) => {
   }
 };
 
+// GET MY_BLOG
 export const getMyBlogs = async (req, res) => {
   try {
     const blogs = await Blog.find({
