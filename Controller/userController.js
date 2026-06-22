@@ -133,6 +133,7 @@ export const delUser = async (req, res) => {
 // USER PROFILE
 
 export const profile = async (req, res) => {
+  console.log("USER_ID", req.users.id);
   try {
     const user = await Users.findById(req.users.id).select("-password");
     res.status(200).json({ success: true, user });
@@ -163,14 +164,16 @@ export const updateProfile = async (req, res) => {
   try {
     const { name, email, bio } = req.body;
 
-    const updateUser = await Users.findByIdAndUpdate(
-      req.users.id,
-      req.body,
-      { new: true },
-    );
+    const updateUser = await Users.findByIdAndUpdate(req.users.id, req.body, {
+      new: true,
+    });
 
-    res.status(200).json({success:true, message:"Profile Update Successfully!!!", user:updateUser})
+    res.status(200).json({
+      success: true,
+      message: "Profile Update Successfully!!!",
+      user: updateUser,
+    });
   } catch (error) {
-    res.status(500).json({success:false, error:error.message})
+    res.status(500).json({ success: false, error: error.message });
   }
 };
