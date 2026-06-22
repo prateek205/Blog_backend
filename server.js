@@ -6,11 +6,11 @@ import blogRoutes from "./Routes/blogRoute.js";
 import userRoutes from "./Routes/userRoute.js";
 import cookieParser from "cookie-parser";
 
-const CLIENT = process.env.CLIENT_URL
 const app = express();
 dotenv.config();
 app.use(express.json());
 app.use(cookieParser());
+const CLIENT = process.env.CLIENT_URL
 app.use(
   cors({
     origin: ["http://localhost:5173",CLIENT],
