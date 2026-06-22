@@ -63,7 +63,7 @@ export const login = async (req, res) => {
     res.cookie("authToken", token, {
       httpOnly: true,
       secure: false,
-      sameSite: "nonr",
+      sameSite: "none",
       path: "/",
     });
 
