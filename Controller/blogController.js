@@ -47,8 +47,43 @@ export const createBlog = async (req, res) => {
 //READ BLOG
 export const getBlogs = async (req, res) => {
   try {
-    const blogs = await Blog.find({}).populate("author", "name email");
-    res.status(200).json({ success: true, count: blogs.length, blogs });
+    
+    console.log("REQUEST.QUERY:", req.query)
+
+    const queryObj = {};
+    if (req.query.category) {
+      queryObj.category = req.query.category;
+    }
+    console.log("QUERY:", queryObj);
+
+    let sortObj = { createdAt: -1 };
+    if (req.query.sort === "Oldest") {
+      sortObj = { createdAt: 1 };
+    }
+
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const blogs = await Blog.find(queryObj)
+      .sort(sortObj)
+      .skip(skip)
+      .limit(limit)
+      .populate("author", "name email")
+      .lean();
+
+    const totalBlogs = await Blog.countDocuments(queryObj);
+    const totalPages = Math.ceil(totalBlogs / limit);
+    res.status(200).json({
+      success: true,
+      count: blogs.length,
+      pagination: {
+        currentPage: page,
+        totalPages: totalPages,
+        totalResult: totalBlogs,
+      },
+      blogs,
+    });
   } catch (error) {
     console.error("Error fetching blogs:", error);
     res.status(500).json({ message: "Internal server error" });
